@@ -9,8 +9,8 @@ Modifcations:
 
  - This network added two `Dropout2d` layer before `LSTM` hidden layer and before `FC 2` Layer.
 
- - At eval stage, this net is also prevent over-fitting from only eval only 1 audio sample to many
-(user-defined) and compute a mean SDR and loss.
+ - At eval stage, this net prevents overfitting from only eval only 1 audio sample by allow many
+(user-defined) audio sample and compute a mean SDR and loss.
 
  - Multi-GPU Training Support
 
