@@ -1,4 +1,3 @@
-#TODO: WIP
 import os
 import glob
 import torch
@@ -9,12 +8,12 @@ from utils.audio import Audio
 from model.model import VoiceFilter
 from model.embedder import SpeechEmbedder
 
-
 def main(args):
     with torch.no_grad():
         model = torch.nn.DataParallel(VoiceFilter()).cuda()
         chkpt_model = torch.load(args.checkpoint_path)
-        model.load_state_dict(chkpt_model)
+        model.load_state_dict(chkpt_model['model'])
+        
         model.eval()
 
         embedder = SpeechEmbedder().cuda()
@@ -47,11 +46,9 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, required=True,
-                        help="yaml file for configuration")
     parser.add_argument('-e', '--embedder_path', type=str, required=True,
                         help="path of embedder model pt file")
-    parser.add_argument('--checkpoint_path', type=str, default=None,
+    parser.add_argument('--checkpoint_path', type=str, default=True,
                         help="path of checkpoint pt file")
     parser.add_argument('-m', '--mixed_file', type=str, required=True,
                         help='path of mixed wav file')

@@ -36,7 +36,7 @@ def validate(audio, model, embedder, testloader, writer, epoch):
             writer.log_evaluation_data(mixed_wav, target_wav, est_wav,
                                     mixed_mag.T, target_mag.T, est_mag.T, est_mask.T,
                                     epoch * config.train['train_step_pre_epoch'],i)
-            if i == config.train['eval_example']: # max eval
+            if i >= config.train['eval_example']: # max eval
                 break 
         test_loss_avg = test_loss_sum / len(testloader.dataset)
         test_sdr_avg = test_sdr_sum / len(testloader.dataset)

@@ -36,10 +36,10 @@ def train(embedder, model, optimizer, trainloader, writer, logger, epoch, pt_dir
                 100. * step / len(trainloader), loss))
             if step % config.train.get('summary_interval') == 0:
                 writer.log_training(loss, (config.train['train_step_pre_epoch'] * (epoch - 1)) + step)
-                logger.info("Wrote Summary at E%d,Step%d" % (epoch, step))
+                logger.info("Wrote Summary at Epoch%d,Step%d" % (epoch, step))
             if step % config.train['ckpt_interval'] == 0 :
                 model_saver(model,pt_dir,epoch,step)
-                logger.info("Saved Checkpoint at E%d,Step%d" % (epoch, step))
+                logger.info("Saved Checkpoint at Epoch%d,Step%d" % (epoch, step))
             if step >= config.train['train_step_pre_epoch']: # exit for max step reached
                 break
             

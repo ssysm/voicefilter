@@ -3,9 +3,17 @@
 Unofficial&Modified PyTorch implementation of Google AI's:
 [VoiceFilter: Targeted Voice Separation by Speaker-Conditioned Spectrogram Masking](https://arxiv.org/abs/1810.04826).
 
-Thanks to: [mindslab-ai/voicefilter](https://github.com/mindslab-ai/voicefilter)
+This project was inspired by and based on: [mindslab-ai/voicefilter](https://github.com/mindslab-ai/voicefilter)
 
-This network added two dropout layer before `LSTM` hidden layer and before `FC 2` Layer
+Modifcations:
+
+ - This network added two `Dropout2d` layer before `LSTM` hidden layer and before `FC 2` Layer.
+
+ - At eval stage, this net is also prevent over-fitting from only eval only 1 audio sample to many
+(user-defined) and compute a mean SDR and loss.
+
+ - Multi-GPU Training Support
+
 
 ## Model Info
 ```bash
@@ -52,5 +60,7 @@ VoiceFilter(
 ```
 
 ## Todo:
- - Working Inference, refactor `generator.py`
  - Impl Power-Law Compression as described in paper.
+ - Adapt Quick Start Guide
+ - Refact `generator.py`, but the original one will work.
+ - Distributed Training
