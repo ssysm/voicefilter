@@ -59,5 +59,4 @@ VoiceFilter(
 ## Todo:
  - Impl Power-Law Compression as described in paper.
  - Adapt Quick Start Guide
- - Refact `generator.py`, but the original one will work.
  - Distributed Training
