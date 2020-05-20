@@ -38,14 +38,9 @@ def train(embedder, model, optimizer, trainloader, writer, logger, epoch, pt_dir
             logger.info('[xla:{}]({}) Loss={:.5f} Rate={:.2f} GlobalRate={:.2f} Time={}'.format(
             xm.get_ordinal(), batch_idx, loss, tracker.rate(),
             tracker.global_rate(), time.asctime()))
-            if step % config.train.get('summary_interval') == 0:
-                writer.log_training(loss, (config.train['train_step_pre_epoch'] * (epoch - 1)) + step)
-                logger.info("Wrote Summary at Epoch%d,Step%d" % (epoch, step))
             if step % config.train['ckpt_interval'] == 0 :
                 model_saver(model,optimizer,pt_dir,epoch)
                 logger.info("Saved Checkpoint at Epoch%d,Step%d" % (epoch, step))
-            if step >= config.train['train_step_pre_epoch'] and config.train['train_step_pre_epoch'] != 1 : # exit for max step reached
-                break
             
     except Exception as e:
         logger.info("Exiting due to exception: %s" % e)
