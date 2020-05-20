@@ -17,8 +17,8 @@ from utils.audio import Audio
 from utils.model_saver import model_saver
 from model.model import VoiceFilter
 from model.embedder import SpeechEmbedder
-from model.train import train
-from model.evaluation import validate
+from model.tpu_train import train
+from model.tpu_evaluation import validate
 
 
 def trainer(model_name):
