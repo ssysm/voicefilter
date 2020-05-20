@@ -1,10 +1,10 @@
 import os
 import torch
 
-def model_saver(model,path, epoch, step):
-    save_path = os.path.join(path, 'VoiceFilter-E%d-S%d.pt' % (epoch,step))
+def model_saver(model, optimizer,path, epoch, step):
+    save_path = os.path.join(path, 'VoiceFilter.pt')
     torch.save({
         'model': model.state_dict(),
-        'epoch': epoch,
-        'step': step
+        'optimizer': optimizer.state_dict(),
+        'epoch': epoch
     },save_path)

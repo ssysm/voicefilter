@@ -43,9 +43,9 @@ def create_dataloader(train):
 class VFDataset(Dataset):
     def __init__(self, train):
         def find_all(file_format):
-            return sorted(glob.glob(os.path.join(self.data_dir, file_format)))
+            return sorted(glob.glob(os.path.join(config.data['base_dir'] + self.data_dir, file_format)))
         self.train = train
-        self.data_dir = config.data['train_dir'] if train else config.data['test_dir']
+        self.data_dir = config.data['base_dir'] + config.data['train_dir'] if train else config.data['base_dir'] + config.data['test_dir']
 
         self.dvec_list = find_all(config.form['dvec'])
         self.target_wav_list = find_all(config.form['target']['wav'])
@@ -67,7 +67,7 @@ class VFDataset(Dataset):
         with open(self.dvec_list[idx], 'r') as f:
             dvec_path = f.readline().strip()
 
-        dvec_wav, _ = librosa.load(dvec_path, sr=config.audio['sample_rate'])
+        dvec_wav, _ = librosa.load(config.data['base_dir'] + dvec_path, sr=config.audio['sample_rate'])
         dvec_mel = self.audio.get_mel(dvec_wav)
         dvec_mel = torch.from_numpy(dvec_mel).float()
 

@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--embedder_path', type=str, required=True,
                         help="path of embedder model pt file")
-    parser.add_argument('--checkpoint_path', type=str, default=True,
+    parser.add_argument('--checkpoint_path', type=str, required=True,
                         help="path of checkpoint pt file")
     parser.add_argument('-m', '--mixed_file', type=str, required=True,
                         help='path of mixed wav file')

@@ -62,26 +62,25 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(),lr=config.train['adam'])
     audio = Audio()
     
-    starting_step = 0
     starting_epoch = 1
 
     if chkpt_path is not None:
         logger.info("Resuming from checkpoint: %s" % chkpt_path)
         checkpoint_file = torch.load(chkpt_path)
         model.load_state_dict(checkpoint_file['model'])
+        optimizer.load_state_dict(checkpoint_file['optimizer'])
         starting_epoch = checkpoint_file['epoch']
-        starting_step = checkpoint_file['step']
     else:
         logger.info("Starting new training run")
 
-    scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
+    scheduler = StepLR(optimizer, step_size=1, gamma=0.98)
     for epoch in range(starting_epoch, config.train['epoch'] + 1):
-        train(embedder,model,optimizer,trainloader,writer,logger,epoch,pt_dir,starting_step)
+        train(embedder,model,optimizer,trainloader,writer,logger,epoch,pt_dir)
+        logger.info("Starting to validate epoch...")
         validate(audio,model,embedder,testloader,writer,epoch)
         scheduler.step()
-        starting_step = 0
 
-    model_saver(model,pt_dir,config.train['epoch'],config.train['train_step_pre_epoch'])
+    model_saver(model,optimizer,pt_dir,config.train['epoch'])
 
 if __name__ == '__main__':
     main()

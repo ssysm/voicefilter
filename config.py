@@ -17,9 +17,10 @@ model = {
 }
 
 data = {
-  "train_dir": '/media/linux/409C52399C522A24/TrainingDataset/voice-filter/records/train',
-  "test_dir": '/media/linux/409C52399C522A24/TrainingDataset/voice-filter/records/test',
-  'audio_len': 3.0
+  "base_dir" : '/media/linux/409C52399C522A24/TrainingDataset/voice-filter/verdict',
+  "train_dir": '/train',
+  "test_dir": '/test',
+  'audio_len': 4.0
 }
 
 form = {
@@ -36,13 +37,13 @@ form = {
 }
 
 train = {
-    "batch_size": 4,
-    "num_workers": 8,
-    "adam": 0.001,
+    "batch_size": 2,
+    "num_workers": 4,
+    "adam": 0.0002,
     "ckpt_interval": 100,
     "summary_interval": 10,
-    "epoch": 10,
-    "train_step_pre_epoch": 200,
+    "epoch": 200,
+    "train_step_pre_epoch": 400,
     "eval_example": 10
 }
 
