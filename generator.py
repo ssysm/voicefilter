@@ -76,9 +76,13 @@ def mix(args, audio, num, s1_dvec, s1_target, s2, train):
     dvec_text_path = formatter(dir_, config.form['dvec'], num)
     with open(dvec_text_path, 'w') as f:
         s1_dvec = s1_dvec.split('/')
-        s1_dvec = s1_dvec[len(s1_dvec) - 4] + '/' + \
-                    s1_dvec[len(s1_dvec) - 3] + '/' + s1_dvec[len(s1_dvec) - 2 ] + \
-                    '/' + s1_dvec[len(s1_dvec) - 1]
+        if train == True :
+            s1_dvec = s1_dvec[len(s1_dvec) - 4] + '/' + \
+                        s1_dvec[len(s1_dvec) - 3] + '/' + s1_dvec[len(s1_dvec) - 2 ] + \
+                        '/' + s1_dvec[len(s1_dvec) - 1]
+        else:
+            s1_dvec = s1_dvec[len(s1_dvec) - 3] + '/' + s1_dvec[len(s1_dvec) - 2 ] + \
+                        '/' + s1_dvec[len(s1_dvec) - 1]
         f.write(s1_dvec)
 
 if __name__ == '__main__':

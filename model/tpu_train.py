@@ -7,18 +7,18 @@ import traceback
 import config
 from utils.model_saver import model_saver
 
-def train(embedder, model, optimizer, trainloader, writer, logger, epoch, pt_dir):
+def train(embedder, model, optimizer, trainloader, writer, logger, epoch, pt_dir,device):
     try:
         tracker = xm.RateTracker()
         criterion = nn.MSELoss()
         model.train()
         step = 0
         for batch_idx, (dvec_mel, target_mag, mixed_mag) in enumerate(trainloader):
-            target_mag, mixed_mag = target_mag.cuda(), mixed_mag.cuda()
+            target_mag, mixed_mag = target_mag.to(device), mixed_mag.to(device)
 
             dvec_list = list()
             for mel in dvec_mel:
-                mel = mel.cuda()
+                mel = mel.to(device)
                 dvec = embedder(mel)
                 dvec_list.append(dvec)
             dvec = torch.stack(dvec_list, dim=0)

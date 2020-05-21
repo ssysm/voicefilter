@@ -6,16 +6,16 @@ import random
 import config
 
 
-def validate(audio, model, embedder, testloader, writer, epoch):
+def validate(audio, model, embedder, testloader, writer, epoch,device):
     model.eval()
     criterion = nn.MSELoss()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
     with torch.no_grad():
         for i , batch in enumerate(testloader):
             dvec_mel, target_wav, mixed_wav, target_mag, mixed_mag, mixed_phase = batch[0]
 
-            dvec_mel = dvec_mel.cuda()
-            target_mag = target_mag.unsqueeze(0).cuda()
-            mixed_mag = mixed_mag.unsqueeze(0).cuda()
+            dvec_mel = dvec_mel.to(device)
+            target_mag = target_mag.unsqueeze(0).to(device)
+            mixed_mag = mixed_mag.unsqueeze(0).to(device)
 
             dvec = embedder(dvec_mel)
             dvec = dvec.unsqueeze(0)

@@ -18,6 +18,7 @@ model = {
 
 data = {
   "base_dir" : '/media/linux/409C52399C522A24/TrainingDataset/voice-filter/verdict',
+  "records_dir":"/media/linux/409C52399C522A24/TrainingDataset/voice-filter/verdict/records",
   "train_dir": '/train',
   "test_dir": '/test',
   'audio_len': 4.0

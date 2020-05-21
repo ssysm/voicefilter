@@ -12,7 +12,7 @@ import torch_xla.distributed.parallel_loader as pl
 import torch_xla.core.xla_model as xm
 
 from utils.writer import MyWriter
-from utils.dataloader import create_dataloader
+from utils.tpu_dataloader import create_dataloader
 from utils.audio import Audio
 from utils.model_saver import model_saver
 from model.model import VoiceFilter
@@ -45,7 +45,7 @@ def trainer(model_name):
     trainloader = create_dataloader(train=True)
     testloader = create_dataloader(train=False)
 
-    embedder_pt = torch.load('/dirve/My Drive/ColabDisk/embedder.pt')
+    embedder_pt = torch.load('/drive/content/My Drive/ColabDisk/embedder_cpu.pt')
     embedder = SpeechEmbedder().to(device)
     embedder.load_state_dict(embedder_pt)
     embedder.eval()
@@ -66,11 +66,11 @@ def trainer(model_name):
         logger.info("Starting new training run")
 
     for epoch in range(starting_epoch, config.train['epoch'] + 1):
-        para_loader  =  pl.ParallelLoader(trainloader, [device])
-        train(para_loader.per_device_loader(device),embedder,model,optimizer,writer,logger,epoch,pt_dir)
+        para_loader  =  pl.ParallelLoader(trainloader, [device]).per_device_loader(device)
+        train(embedder,model,optimizer,para_loader,writer,logger,epoch,pt_dir,device)
         xm.master_print("Finished training epoch {}".format(epoch))
         logger.info("Starting to validate epoch...")
-        para_loader  =  pl.ParallelLoader(testloader, [device])
-        validate(audio,model,embedder,para_loader,writer,epoch)
+        para_loader  =  pl.ParallelLoader(testloader, [device]).per_device_loader(device)
+        validate(audio,model,embedder,para_loader,writer,epoch,device)
 
     model_saver(model,optimizer,pt_dir,config.train['epoch'])

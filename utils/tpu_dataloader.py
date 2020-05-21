@@ -3,6 +3,7 @@ import glob
 import torch
 import librosa
 from torch.utils.data import Dataset, DataLoader
+import torch_xla.core.xla_model as xm
 from utils.audio import Audio
 import config
 
@@ -26,18 +27,30 @@ def create_dataloader(train):
         return batch
 
     if train:
-        return DataLoader(dataset=VFDataset(True),
+        dataset = VFDataset(True)
+        train_sampler = torch.utils.data.distributed.DistributedSampler(
+            dataset,
+            num_replicas=xm.xrt_world_size(),
+            rank=xm.get_ordinal(),
+            shuffle=True)
+        return DataLoader(dataset=dataset,
                           batch_size=config.train['batch_size'],
-                          shuffle=True,
                           num_workers=config.train['num_workers'],
                           collate_fn=train_collate_fn,
                           pin_memory=True,
                           drop_last=True,
-                          sampler=None)
+                          sampler=train_sampler)
     else:
-        return DataLoader(dataset=VFDataset(False),
+        dataset = VFDataset(False)
+        test_sampler = torch.utils.data.distributed.DistributedSampler(
+            dataset,
+            num_replicas=xm.xrt_world_size(),
+            rank=xm.get_ordinal(),
+            shuffle=False)
+        return DataLoader(dataset=dataset,
                           collate_fn=test_collate_fn,
-                          batch_size=1, shuffle=False, num_workers=0)
+                          sampler=test_sampler,
+                          batch_size=1, shuffle=False, num_workers=1)
 
 
 class VFDataset(Dataset):
@@ -45,7 +58,7 @@ class VFDataset(Dataset):
         def find_all(file_format):
             return sorted(glob.glob(os.path.join(self.data_dir, file_format)))
         self.train = train
-        self.data_dir = config.data['base_dir'] + config.data['train_dir'] if train else config.data['base_dir'] + config.data['test_dir']
+        self.data_dir = config.data['records_dir'] + config.data['train_dir'] if train else config.data['records_dir'] + config.data['test_dir']
 
         self.dvec_list = find_all(config.form['dvec'])
         self.target_wav_list = find_all(config.form['target']['wav'])
